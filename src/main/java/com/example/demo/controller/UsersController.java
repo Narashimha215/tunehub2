@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 //import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ public class UsersController {
 		return "home.html";
 	}
 	@PostMapping("/validate")
-	public String validate(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession session) {
+	public String validate(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession session, Model model) {
 		
 		if(service.validateUser(email, password)==true) {
 			String role = service.getRole(email);
@@ -47,6 +48,9 @@ public class UsersController {
 			}
 			else
 			{
+				Users user = service.getUser(email);
+				boolean userStatus = user.isPremium();
+				model.addAttribute("isPremium",userStatus);
 				return "customerHome";
 			}
 		}
