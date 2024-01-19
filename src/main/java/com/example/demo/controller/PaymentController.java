@@ -12,8 +12,12 @@ import com.example.demo.services.UsersService;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import com.razorpay.Utils;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -26,6 +30,20 @@ public class PaymentController {
 	@GetMapping("/pay")
 	public String pay() {
 		return "pay";
+	}
+	
+	@GetMapping("/payment-success")
+	public String paymentSuccess(HttpSession session) {
+		String mail = (String) session.getAttribute("email");
+		Users u = service.getUser(mail);
+		u.setPremium(true);
+		service.updateUser(u);
+		return "customerHome";
+	}
+	
+	@GetMapping("/payment-failure")
+	public String paymentfailure() {
+		return "customerHome";
 	}
 	
 	
@@ -56,4 +74,19 @@ public class PaymentController {
 			return order.toString();
 		}
 	}	
+	@PostMapping("/verify")
+	@ResponseBody
+	public boolean verifyPayment(@RequestParam String orderId, @RequestParam String paymentId, @RequestParam String signature) {
+		try {
+			RazorpayClient razorpayClient = new RazorpayClient("rzp_test_2mnOkEom7kApd7", "LbksebDwdtK57ewTFVbDlDEb");
+
+			String verificationDate = orderId + "|" + paymentId;
+
+			boolean isValidSignature =  Utils.verifySignature(verificationDate,signature, "LbksebDwdtK57ewTFVbDlDEb");
+			return isValidSignature;
+		}catch(RazorpayException e) {
+			e.printStackTrace();
+			return false;
+		}	
+	}
 }
