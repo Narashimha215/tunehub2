@@ -28,14 +28,15 @@ a{
 </style>
 </head>
 <body>
-	<h1>Customer Home</h1>
-<div class="non-premium">
-	<a href="pay">Get Premium</a>
-	<br><br>
-	<a href="logout">LOGOUT</a>
+<h1>Customer Home</h1>
+
+	<div th:unless="${isPremium}" class="non-premium">
+		<a href="pay">Get Premium</a>
+		<br><br>
+		<a href="logout">LOGOUT</a>
 	</div>
 	
-	<div class="premium">
+	<div th:if="${isPremium}" class="premium">
 	<table border="1">
 		<thead>
 			<tr>
