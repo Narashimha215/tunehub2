@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style type="text/css">
+body{
+	background-color: red;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+div{
+	border: 2px solid;
+	width:500px;
+	height:250px;
+	background-color: yellow;
+}
+h1{
+	background-color: blue;
+	width:400px;
+	height:40px;
+}
+a{
+	background-color: white;
+}
+</style>
+</head>
+<body>
+<h1>Customer Home</h1>
+
+	<div th:unless="${isPremium}" class="non-premium">
+		<a href="pay">Get Premium</a>
+		<br><br>
+		<a href="logout">LOGOUT</a>
+	</div>
+	
+	<div th:if="${isPremium}" class="premium">
+	<table border="1">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Artist</th>
+				<th>Genre</th>
+				<th>Play</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="song:${songs}">
+				<td th:text="${song.name}">  </td>
+				<td th:text="${song.artist}">  </td>
+				<td th:text="${song.genre}">  </td>
+				<!-- <td th:utext="${song.link}">  </td>   -->
+				<td>
+					<audio controls>
+						<source th:src="${song.link}" type="audio/mpeg">
+					</audio>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+</body>
+</html>
